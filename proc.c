@@ -69,6 +69,13 @@ found:
   p->context = (struct context*)sp;
   memset(p->context, 0, sizeof *p->context);
   p->context->eip = (uint)forkret;
+  
+
+  acquire(&tickslock);
+  p->startticks =ticks; //not sure if this is inaccurate
+  release(&tickslock);
+
+  
 
   return p;
 }
