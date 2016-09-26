@@ -207,6 +207,8 @@ exit(void)
     }
   }
 
+  proc->trapcount = 0;
+
   begin_op();
   iput(proc->cwd);
   end_op();

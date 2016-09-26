@@ -10,12 +10,14 @@
 int
 sys_fork(void)
 {
+  proc->trapcount++;
   return fork();
 }
 
 int
 sys_exit(void)
 {
+  proc->trapcount++;
   exit();
   return 0;  // not reached
 }
@@ -23,12 +25,14 @@ sys_exit(void)
 int
 sys_wait(void)
 {
+  proc->trapcount++;
   return wait();
 }
 
 int
 sys_kill(void)
 {
+  proc->trapcount++;
   int pid;
 
   if(argint(0, &pid) < 0)
@@ -39,12 +43,14 @@ sys_kill(void)
 int
 sys_getpid(void)
 {
+  proc->trapcount++;
   return proc->pid;
 }
 
 int
 sys_sbrk(void)
 {
+  proc->trapcount++;
   int addr;
   int n;
 
@@ -59,6 +65,7 @@ sys_sbrk(void)
 int
 sys_sleep(void)
 {
+  proc->trapcount++;
   int n;
   uint ticks0;
 
@@ -82,6 +89,7 @@ sys_sleep(void)
 int
 sys_uptime(void)
 {
+  proc->trapcount++;
   uint xticks;
 
   acquire(&tickslock);
@@ -94,6 +102,7 @@ sys_uptime(void)
 int
 sys_gticks(void)
 {
+  proc->trapcount++;
   uint xticks;
 
   acquire(&tickslock);
@@ -101,4 +110,12 @@ sys_gticks(void)
   release(&tickslock);
   
   return xticks - proc->startticks;
+}
+
+
+int
+sys_tcount(void)
+{
+  proc->trapcount++; //THIS MAY BE WRONG. Not sure if it should do this.
+  return proc->trapcount;
 }
