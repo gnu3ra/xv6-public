@@ -94,5 +94,11 @@ sys_uptime(void)
 int
 sys_gticks(void)
 {
-  return 0;
+  uint xticks;
+
+  acquire(&tickslock);
+  xticks = ticks;
+  release(&tickslock);
+  
+  return xticks - proc->startticks;
 }

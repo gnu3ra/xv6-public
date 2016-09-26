@@ -5,6 +5,7 @@
 int
 main(int argc, char *argv[])
 {
+  sleep(1);
   printf(1, "ret: %d\n", gticks());
   exit();
 }
