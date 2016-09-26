@@ -64,6 +64,7 @@ struct proc {
   struct inode *cwd;           // Current directory
   char name[16];               // Process name (debugging)
   uint startticks; //Ticks when process was allocated
+  uint trapcount; //incremented whenever process traps
 };
 
 // Process memory is laid out contiguously, low addresses first:
