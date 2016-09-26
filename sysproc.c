@@ -94,6 +94,5 @@ sys_uptime(void)
 int
 sys_gticks(void)
 {
-
   return 0;
 }
