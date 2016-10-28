@@ -6,4 +6,7 @@
 - mmu.h
 - vm.c
 - memlayout.h
+- exec syscall
+- fork syscall
+- Makefile
 
