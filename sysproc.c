@@ -116,6 +116,6 @@ sys_gticks(void)
 int
 sys_tcount(void)
 {
-  //proc->trapcount++; //THIS MAY BE WRONG. Not sure if it should do this.
+  // proc->trapcount++; //THIS MAY BE WRONG. Not sure if it should do this.
   return proc->trapcount;
 }

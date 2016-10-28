@@ -5,24 +5,14 @@
 int
 main(int argc, char *argv[])
 {
-  sleep(100);
-  printf(1, "[proccess1] Ticks from one second of sleep %d\n", gticks());
-  printf(1, "[proccess1] Traps so far (including this call) %d\n", tcount());
-  sleep(600);
-  printf(1, "[proccess1] Ticks from six second of sleep %d\n", gticks());
-  printf(1, "[proccess1] Traps so far (including this call) %d\n", tcount());
-
-  if(fork() == 0) {
-    sleep(100);
-    printf(1, "[process2] Ticks from one second of sleep %d\n", gticks());
-    printf(1, "[process2] Traps so far (including this call) %d\n", tcount());
-    sleep(600);
-    printf(1, "[process2] Ticks from six second of sleep %d\n", gticks());
-    printf(1, "[process2] Traps so far (including this call) %d\n", tcount());
-  }
-  else {
-    wait();
-  }
   
+  int * x;
+  x =(unsigned long) 0x0;
+  int y  = *x;
+  printf(1,"pointer is %p\n value is %d \n",x, y);
+
+  printf(1,"hello\n");
+  sleep(100);
   exit();
+//  return 0;
 }
