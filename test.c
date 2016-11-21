@@ -13,7 +13,7 @@ main(int argc, char *argv[])
   int y  = *x;
   printf(1,"pointer is %p\n value is %d \n",x, y);
 
-  printf(1,"hello\n");
+  printf(1,"no segfault\n");
   exit();
 //  return 0;
 }
