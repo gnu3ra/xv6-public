@@ -25,6 +25,7 @@ int sleep(int);
 int uptime(void);
 int gticks(void);
 int tcount(void);
+uint icount(void);
 
 // ulib.c
 int stat(char*, struct stat*);

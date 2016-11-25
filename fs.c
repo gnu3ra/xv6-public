@@ -177,6 +177,11 @@ iinit(int dev)
           sb.bmapstart);
 }
 
+
+uint getnuminodes(void) {
+  return sb.ninodes;
+}
+
 static struct inode* iget(uint dev, uint inum);
 
 //PAGEBREAK!

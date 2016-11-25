@@ -189,3 +189,12 @@ int tcount(void);
 
 // number of elements in fixed-size array
 #define NELEM(x) (sizeof(x)/sizeof((x)[0]))
+
+
+
+//functions for fsck (fs.c)
+struct inode * ilookup(uint, uint);
+uint getnuminodes(void);
+
+//functions for fsck (syscalls)
+int sys_icount(void);

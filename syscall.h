@@ -22,3 +22,4 @@
 #define SYS_close  21
 #define SYS_gticks 22
 #define SYS_tcount 23
+#define SYS_icount 24

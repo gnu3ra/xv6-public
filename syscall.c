@@ -125,6 +125,7 @@ static int (*syscalls[])(void) = {
 [SYS_close]   sys_close,
 [SYS_gticks]  sys_gticks,
 [SYS_tcount]  sys_tcount,
+[SYS_icount]  sys_icount, 
 };
 
 void
