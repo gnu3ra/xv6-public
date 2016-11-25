@@ -223,6 +223,12 @@ iupdate(struct inode *ip)
   brelse(bp);
 }
 
+
+//public wrapper for iget
+struct inode * ilookup(uint dev, uint inum) {
+  return iget(dev, inum);
+}
+
 // Find the inode with number inum on device dev
 // and return the in-memory copy. Does not lock
 // the inode and does not read it from disk.
