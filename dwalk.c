@@ -27,7 +27,7 @@ char * filecat(char * one, char * two, char sep) {
   }
   result[onelen] = sep;
   for(i=onelen+1;i<(onelen + 1 + twolen);i++) {
-    one[i] = two[i-(onelen + 1)];
+    result[i] = two[i-(onelen + 1)];
   }
   return result; 
 }
@@ -108,13 +108,17 @@ void recursion(char * path) {
       
       printf(1, "%s %d %d %d\n", fmtname(buf), st.type, st.ino, st.size);
       if(st.type == T_DIR) {
-        close(fd);
-        recursion(path);
+        //close(fd);
+        
+        recursion(filecat(path, de.name, '/'));
+        //printf(1, "path: %s\n", path);
+        //printf(1, "de.name: %s\n",de.name);
+        //printf(1, "We should be recursing: %s\n",);
       }
     }
     break;
   }
-  close(fd);
+//  close(fd);
 
 }
 
@@ -123,4 +127,5 @@ int
 main(int argc, char *argv[])
 {
   recursion("./");
+  exit();
 }
