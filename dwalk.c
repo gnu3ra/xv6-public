@@ -33,25 +33,6 @@ char * filecat(char * one, char * two, char sep) {
   return result; 
 }
 
-char*
-fmtname(char *path)
-{
-  static char buf[DIRSIZ+1];
-  char *p;
-
-  // Find first character after last slash.
-  for(p=path+strlen(path); p >= path && *p != '/'; p--)
-    ;
-  p++;
-
-  // Return blank-padded name.
-  if(strlen(p) >= DIRSIZ)
-    return p;
-  memmove(buf, p, strlen(p));
-  memset(buf+strlen(p), ' ', DIRSIZ-strlen(p));
-  return buf;
-}
-
 
 
 /* basically a clone of ls, but recursive */ 
@@ -80,7 +61,7 @@ void recursion(char * path) {
 
   switch(st.type){
   case T_FILE:
-    printf(1, "%s %d %d %d\n", fmtname(path), st.type, st.ino, st.size);
+    printf(1, "%s %d %d %d\n", path, st.type, st.ino, st.size);
     break;
 
   case T_DIR:
@@ -107,7 +88,7 @@ void recursion(char * path) {
       if(strcmp(de.name, ".") == 0)
         continue;
       
-      printf(1, "%s %d %d %d\n", fmtname(buf), st.type, st.ino, st.size);
+      printf(1, "%s %d %d %d\n", path, st.type, st.ino, st.size);
       if(st.type == T_DIR) {
         //close(fd);
         
