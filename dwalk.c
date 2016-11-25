@@ -87,17 +87,20 @@ void recursion(char * path) {
         continue;
       if(strcmp(de.name, ".") == 0)
         continue;
-      
-      printf(1, "%s %d %d %d\n", path, st.type, st.ino, st.size);
+
+      char * chname;
+      chname = filecat(path, de.name, '/');
+      printf(1, "%s %d %d %d\n", chname, st.type, st.ino, st.size);
       if(st.type == T_DIR) {
         //close(fd);
         
-        recursion(filecat(path, de.name, '/'));
+        recursion(chname);
         //printf(1, "path: %s\n", path);
         //printf(1, "de.name: %s\n",de.name);
         //printf(1, "We should be recursing: %s\n",);
       }
     }
+    close(fd);
     break;
   }
 //  close(fd);
