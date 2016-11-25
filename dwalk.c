@@ -10,8 +10,9 @@
 #include "memlayout.h"
 
 
-#define NULL 0x0
-
+/*
+ * Recursive ls-like directory walker command
+ */ 
 
 
 char * filecat(char * one, char * two, char sep) {
