@@ -14,8 +14,8 @@
  */ 
 struct unode * iwalk(void) {
   struct unode * out = malloc(sizeof(struct unode));
-  out->first = out;
   struct unode * ret = out;
+  out->first = ret;
   uint i;
   for(i=1;i<icount();i++) {
     struct dinode * test =  malloc(sizeof(struct dinode));
