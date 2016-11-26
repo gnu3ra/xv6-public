@@ -1,4 +1,4 @@
-#include "types.h"
+#include "dwalk.h"
 #include "param.h"
 #include "user.h"
 #include "spinlock.h"
@@ -12,17 +12,34 @@
 /*
  * Recursive ls-like directory walker command
  */ 
-
-int
-main(int argc, char *argv[])
-{
+struct unode * iwalk(void) {
+  struct unode * out = malloc(sizeof(struct unode));
+  out->first = out;
+  struct unode * ret = out;
   uint i;
   for(i=1;i<icount();i++) {
     struct dinode * test =  malloc(sizeof(struct dinode));
     getinode(test, 1, i);
-    if(test->type != 0)
-      printf(1,"type: %d inum: %d\n", test->type, i);
+    if(test->type != 0) {
+      //   printf(1, "count %d\n",i);
+      out->type = (uint) test->type;
+      out->inum =  i;
+      out->next = malloc(sizeof(struct unode));
+      out = out->next;
+    }
     free(test);
+  }
+  return ret;
+}
+
+int
+main(int argc, char *argv[])
+{
+  struct unode* n =  iwalk();
+
+  while(n->next != 0x0) {
+    printf(1,"%d %d\n", n->inum, n->type);
+    n = n->next;
   }
   exit();
 }
