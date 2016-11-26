@@ -179,7 +179,9 @@ iinit(int dev)
 
 
 uint getnuminodes(void) {
-  return sb.ninodes;
+  struct superblock sub;
+  readsb(1, &sub);
+  return sub.ninodes;
 }
 
 static struct inode* iget(uint dev, uint inum);

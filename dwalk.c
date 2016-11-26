@@ -61,7 +61,7 @@ void recursion(char * path) {
 
   switch(st.type){
   case T_FILE:
-    printf(1, "%s type: %d inode: %d\n", path, st.type, st.ino);
+    printf(1, "%s type: %d inode: %d device: %d\n", path, st.type, st.ino, st.dev);
     break;
 
   case T_DIR:
@@ -90,7 +90,7 @@ void recursion(char * path) {
 
       char * chname;
       chname = filecat(path, de.name, '/');
-      printf(1, "%s type: %d inode: %d\n", chname, st.type, st.ino);
+      printf(1, "%s type: %d inode: %d device: %d\n", chname, st.type, st.ino, st.dev);
       if(st.type == T_DIR) {
         //close(fd);
         

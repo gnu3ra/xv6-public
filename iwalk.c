@@ -8,51 +8,20 @@
 #include "syscall.h"
 #include "memlayout.h"
 #include "file.h"
+
 /*
  * Recursive ls-like directory walker command
  */ 
 
-
-char * filecat(char * one, char * two, char sep) {
-  int onelen;
-  int twolen;
-  onelen = strlen(one);
-  twolen = strlen(two);
-  char * result;
-  result  = malloc((onelen + 1 + twolen) * sizeof(char));
-  int i;
-  for(i=0;i<onelen;i++) {
-    result[i] = one[i];
-  }
-  result[onelen] = sep;
-  for(i=onelen+1;i<(onelen + 1 + twolen);i++) {
-    result[i] = two[i-(onelen + 1)];
-  }
-  return result; 
-}
-
 int
 main(int argc, char *argv[])
 {
-  //recursion("./");
-
-  int ic;
-  ic = icount();
-  printf(1, "read superblock: %d inodes\n",ic);
-  int i;
-  for(i=0;i<ic;i++) {
-  
-    struct inode * test = malloc(sizeof(struct inode));
-    
-    if(getinode(test,0,i) < 0) {
-      printf(1, "error in kernel. Plz call 555-CALL-HELP\n");
-      free(test);
-      continue;
-    }
-    else {
-      printf(1, "found inode!~ inum: %d type: %d\n", test->inum, test->type);
-      free(test);
-    }
+  uint i;
+  for(i=0;i<30;i++) {
+    struct inode * test =  malloc(sizeof(struct inode));
+    getinode(test, 1, i);
+    printf(1,"flags: %d inum: %d nlink: %d\n", test->flags, test->inum, test->nlink );
+    free(test);
   }
   exit();
 }
