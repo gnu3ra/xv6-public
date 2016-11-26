@@ -32,7 +32,24 @@ struct dinode *  openfile(char * path) {
 }
 
 
+void help(void) {
+  printf(1, "Help! you did something wrong.\n");
+}
+
+void printdinode(struct dinode * in) {
+  printf(1,"inode summary: \n");
+  printf(1,"type: %d\nsize: %d\nlinks: %d\n",in->type, in->size, in->nlink);
+}
+
 int main(int argc, char ** argv) {
 
+  if(argc < 1) {
+    help();
+    exit();
+  }
+  else {
+    printdinode(openfile(argv[1]));
+  }
+  exit();
   return 0;
 }
