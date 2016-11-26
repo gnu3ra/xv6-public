@@ -454,11 +454,6 @@ int sys_getinode(void) {
     return -2;
   if(argint(2, &inum) < 0)
     return -3;
-  struct inode * tmp ;
-  tmp = ilookup((uint) dev, (uint)inum);
-  ilock(tmp);
-  memmove(&in, tmp, sizeof(struct inode));
-  iunlock(tmp);
-  iput(tmp);
+  in = ilookup((uint) dev, (uint)inum);
   return 0; 
 }

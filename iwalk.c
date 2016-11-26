@@ -7,6 +7,7 @@
 #include "buf.h"
 #include "syscall.h"
 #include "memlayout.h"
+#include "file.h"
 /*
  * Recursive ls-like directory walker command
  */ 
@@ -36,8 +37,10 @@ main(int argc, char *argv[])
   //recursion("./");
 
   printf(1, "read superblock: %d inodes\n",icount() );
-  struct inode * test = 0x0;
-  getinode(test, 0, 2);
-  printf(1, "getinode returns %d\n",0 );
+  struct inode * test = malloc(sizeof(struct inode));
+
+  printf(1, "getinode returns %d\n",  getinode(test, 0, 10) );
+
+  printf(1, "found inode!~ inum: %d type: %d\n", test->inum, test->type);
   exit();
 }
