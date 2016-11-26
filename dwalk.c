@@ -73,6 +73,7 @@ static void recursion(char * path, struct unode * nodelist) {
   case T_FILE:
     nodelist->type = st.type;
     nodelist->inum = st.ino;
+    nodelist->nlinks = st.nlink;
     nodelist->next = malloc(sizeof(struct unode));
     nodelist = nodelist->next;
     break;
@@ -105,6 +106,7 @@ static void recursion(char * path, struct unode * nodelist) {
       chname = filecat(path, de.name, '/');
       nodelist->type = st.type;
       nodelist->inum =   st.ino;
+      nodelist->linkto = de.inum; //this may be wrong
       nodelist->next = malloc(sizeof(struct unode));
       nodelist = nodelist->next;
       if(st.type == T_DIR) {

@@ -55,5 +55,7 @@ int main(void) {
   struct unode * second = iwalk();
 
   printf(1,"compare ret value %d\n", ucompare(first,second));
+
+  
   exit();
 }

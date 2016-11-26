@@ -24,6 +24,7 @@ struct unode * iwalk(void) {
       //   printf(1, "count %d\n",i);
       out->type = (uint) test->type;
       out->inum =  i;
+      out->nlinks = test->nlink;
       out->next = malloc(sizeof(struct unode));
       out = out->next;
     }
