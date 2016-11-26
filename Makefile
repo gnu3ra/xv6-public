@@ -179,6 +179,7 @@ UPROGS=\
 	_rdir\
 	_compare\
 	_filepuke\
+	_fsck\
 
 fs.img: mkfs $(UPROGS)
 	./mkfs fs.img $(UPROGS)
@@ -259,6 +260,8 @@ _dwalk: dwalkmain.o
 _iwalk: iwalkmain.o
 
 _filepuke: filepuke.o
+
+_fsck: dwalk.o iwalk.o
 
 dist:
 	rm -rf dist
