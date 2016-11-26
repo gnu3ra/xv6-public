@@ -38,11 +38,19 @@ int checklinks(struct unode * first, struct unode * second) {
   int dcounter;
   fcounter = 0;
   dcounter = 0;
+  int root;
+  root = 0;
   while(first->next != 0x0) {
-    struct filelink f;
-    f.filenum = first->inum;
-    f.numlinks = first->nlinks;
-    files[dcounter] = f;
+    struct dirlink f;
+    if(first->nlinks == 0) {
+      root++;
+      continue;
+    }
+    if(root > 1)
+      return -1;
+    f.dirnum = first->inum;
+    f.linkto = first->nlinks;
+    dirs[dcounter] = f;
     dcounter++;
     first = first->next;
     
@@ -51,7 +59,11 @@ int checklinks(struct unode * first, struct unode * second) {
   fcounter = 0;
   dcounter = 0;
   while(second->next != 0x0) {
+    struct filelink i;
+    i.filenum = second->inum;
+    i.numlinks = second->nlinks;
     second = second->next;
+    files[fcounter] = i;
     fcounter++;
   }
   return 0;
