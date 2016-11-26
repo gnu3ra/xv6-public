@@ -108,13 +108,7 @@ static void recursion(char * path, struct unode * nodelist) {
       nodelist->next = malloc(sizeof(struct unode));
       nodelist = nodelist->next;
       if(st.type == T_DIR) {
-        //close(fd);
-
-
         recursion(chname, nodelist);
-        //printf(1, "path: %s\n", path);
-        //printf(1, "de.name: %s\n",de.name);
-        //printf(1, "We should be recursing: %s\n",);
       }
     }
     close(fd);
