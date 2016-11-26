@@ -71,11 +71,7 @@ static void recursion(char * path, struct unode * nodelist) {
 
   switch(st.type){
   case T_FILE:
-    nodelist->type = st.type;
-    nodelist->inum = st.ino;
-    nodelist->nlinks = st.nlink;
-    nodelist->next = malloc(sizeof(struct unode));
-    nodelist = nodelist->next;
+    printf(1,"This shouldn't be printed\n");
     break;
 
   case T_DIR:
@@ -86,6 +82,12 @@ static void recursion(char * path, struct unode * nodelist) {
     strcpy(buf, path);
     p = buf+strlen(buf);
     *p++ = '/';
+
+
+    nodelist->type = st.type;
+    nodelist->inum = st.ino;
+    nodelist->next = malloc(sizeof(struct unode));
+    nodelist = nodelist->next;
     while(read(fd, &de, sizeof(de)) == sizeof(de)){
       if(de.inum == 0)
         continue;
@@ -105,8 +107,7 @@ static void recursion(char * path, struct unode * nodelist) {
       char * chname;
       chname = filecat(path, de.name, '/');
       nodelist->type = st.type;
-      nodelist->inum =   st.ino;
-      nodelist->linkto = de.inum; //this may be wrong
+      nodelist->inum =   de.inum;
       nodelist->next = malloc(sizeof(struct unode));
       nodelist = nodelist->next;
       if(st.type == T_DIR) {

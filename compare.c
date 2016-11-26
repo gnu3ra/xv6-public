@@ -27,7 +27,8 @@ int ucompare(struct unode* first, struct unode* second) {
            faulty = 1;
          }
          else {
-           //printf(1,"GHaaaaa [%d] [%d]\n",first->type,  second->type);
+//           printf(1,"GHaaaaa [%d] [%d]\n",first->type,  second->type);
+           secondcounter++;
            break;
          }
        }
@@ -41,8 +42,10 @@ int ucompare(struct unode* first, struct unode* second) {
      first = first->next;
      firstcounter++;
    }
-   if(secondmax != firstcounter)
+   if(secondmax != firstcounter) {
+     printf(1, "Secondmax: %d Firstcounter: %d\n",secondmax, firstcounter);
      return -1;
+   }
    if(faulty)
      return -2;
 
