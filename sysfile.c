@@ -441,3 +441,24 @@ sys_pipe(void)
   fd[1] = fd1;
   return 0;
 }
+
+
+
+int sys_getinode(void) {
+  struct inode * in;
+  int dev;
+  int inum;
+  if(argptr(0,(void*)&in, sizeof(struct inode)) < 0)
+    return -1;
+  if(argint(1, &dev) < 0)
+    return -2;
+  if(argint(2, &inum) < 0)
+    return -3;
+  struct inode * tmp ;
+  tmp = ilookup((uint) dev, (uint)inum);
+  ilock(tmp);
+  memmove(&in, tmp, sizeof(struct inode));
+  iunlock(tmp);
+  iput(tmp);
+  return 0; 
+}

@@ -193,8 +193,8 @@ int tcount(void);
 
 
 //functions for fsck (fs.c)
-struct inode * ilookup(uint, uint);
 uint getnuminodes(void);
 
 //functions for fsck (syscalls)
 int sys_icount(void);
+int sys_getinode(void);

@@ -125,3 +125,4 @@ sys_icount(void) {
   proc->trapcount++;
   return getnuminodes();
 }
+
