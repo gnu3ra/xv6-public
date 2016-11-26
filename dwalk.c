@@ -39,7 +39,7 @@ char * filecat(char * one, char * two, char sep) {
 struct unode * dwalk(char* path) {
   struct unode * n = malloc(sizeof(struct unode));
   n->first = n;
-  int size; 
+  int size = 0; 
   recursion(path, n,&size );
   n = n->first;
   n->size = size;
@@ -85,12 +85,14 @@ static void recursion(char * path, struct unode * nodelist, int * size) {
     p = buf+strlen(buf);
     *p++ = '/';
 
-
-    nodelist->type = st.type;
-    nodelist->inum = st.ino;
-    nodelist->next = malloc(sizeof(struct unode));
-    nodelist = nodelist->next;
-    (*size)++;
+    if((*size)==0) {
+      nodelist->type = st.type;
+      nodelist->inum = st.ino;
+      nodelist->nlinks = 0;
+      nodelist->next = malloc(sizeof(struct unode));
+      nodelist = nodelist->next;
+      (*size)++;
+    }
     while(read(fd, &de, sizeof(de)) == sizeof(de)){
       if(de.inum == 0)
         continue;
@@ -110,7 +112,8 @@ static void recursion(char * path, struct unode * nodelist, int * size) {
       char * chname;
       chname = filecat(path, de.name, '/');
       nodelist->type = st.type;
-      nodelist->inum =   de.inum;
+      nodelist->inum =   st.ino;
+      nodelist->nlinks = de.inum;
       nodelist->next = malloc(sizeof(struct unode));
       nodelist = nodelist->next;
       (*size)++;
