@@ -45,7 +45,7 @@ I changed these files to add the syscalls
 **defs.h**: added definition for global use.
  
 
-## New files addes
+## New files added
 
 - dwalk.c
 - dwalk.h
