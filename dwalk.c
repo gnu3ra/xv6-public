@@ -1,4 +1,4 @@
-#include "types.h"
+#include "dwalk.h"
 #include "param.h"
 #include "types.h"
 #include "stat.h"
@@ -14,6 +14,8 @@
  * Recursive ls-like directory walker command
  */ 
 
+
+static void recursion(char*, struct unode*);
 
 char * filecat(char * one, char * two, char sep) {
   int onelen;
@@ -34,10 +36,18 @@ char * filecat(char * one, char * two, char sep) {
 }
 
 
+struct unode * dwalk(char* path) {
+  struct unode * n = malloc(sizeof(struct unode));
+  n->first = n;
+  recursion(path, n);
+  n = n->first;
+  return n;
+}
+
 
 /* basically a clone of ls, but recursive */ 
-void recursion(char * path) {
-
+static void recursion(char * path, struct unode * nodelist) {
+  
   char buf[512], *p;
   int fd_tmp;
   struct dirent de;
@@ -61,7 +71,10 @@ void recursion(char * path) {
 
   switch(st.type){
   case T_FILE:
-    printf(1, "type: %d inum: %d\n",  st.type, st.ino);
+    nodelist->type = st.type;
+    nodelist->inum = st.ino;
+    nodelist->next = malloc(sizeof(struct unode));
+    nodelist = nodelist->next;
     break;
 
   case T_DIR:
@@ -90,11 +103,15 @@ void recursion(char * path) {
 
       char * chname;
       chname = filecat(path, de.name, '/');
-      printf(1, "type: %d inode: %d\n",  st.type, st.ino);
+      nodelist->type = st.type;
+      nodelist->inum =   st.ino;
+      nodelist->next = malloc(sizeof(struct unode));
+      nodelist = nodelist->next;
       if(st.type == T_DIR) {
         //close(fd);
-        
-        recursion(chname);
+
+
+        recursion(chname, nodelist);
         //printf(1, "path: %s\n", path);
         //printf(1, "de.name: %s\n",de.name);
         //printf(1, "We should be recursing: %s\n",);
@@ -111,6 +128,11 @@ void recursion(char * path) {
 int
 main(int argc, char *argv[])
 {
-  recursion("./");
+  struct unode* n =  dwalk("./");
+
+  while(n->next != 0x0) {
+    printf(1,"%d %d\n", n->inum, n->type);
+    n = n->next;
+  }
   exit();
 }
