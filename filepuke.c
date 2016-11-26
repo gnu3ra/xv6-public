@@ -76,9 +76,12 @@ void zerodir(char * path, int offset) {
     int counter =0;
     do{
       if(counter == offset) {
+        printf(1, "writing to de entry [%s]\n",de.name );
+        
         write(fd, &wr, sizeof(wr));
         break;
       }
+      counter ++;
     }while (read(fd, &de, sizeof(de)) == sizeof(de));
     close(fd);
     break;
