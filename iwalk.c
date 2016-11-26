@@ -21,7 +21,7 @@ main(int argc, char *argv[])
     struct dinode * test =  malloc(sizeof(struct dinode));
     getinode(test, 1, i);
     if(test->type != 0)
-      printf(1,"type: %d inum: %d nlink: %d\n", test->type, i , test->nlink);
+      printf(1,"type: %d inum: %d\n", test->type, i);
     free(test);
   }
   exit();
