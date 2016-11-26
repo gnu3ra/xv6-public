@@ -458,5 +458,6 @@ int sys_getinode(void) {
   tmp  = ilookup((uint) dev, (uint)inum);
 
   memmove(in, tmp, sizeof(struct inode));
+  iput(tmp);
   return 0; 
 }
