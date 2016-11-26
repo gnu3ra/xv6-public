@@ -36,11 +36,47 @@ I changed these files to add the syscalls
 
 **syscall.h**: defines the trap vector for the call to hardware. New syscalls are at the end. 
 
-**user.h** adds the function definitions that the userland calls
+**user.h**: adds the function definitions that the userland calls
 
-**syscall.c** Adds 'linking code' that links the trap vector in *syscall.h* to the syscall defined in *sysproc.c* and *sysfile.c*
+**syscall.c**: Adds 'linking code' that links the trap vector in *syscall.h* to the syscall defined in *sysproc.c* and *sysfile.c*
 
-**usys.S** Runs a macro that does background work for defining a syscall at a low level. 
+**usys.S**: Runs a macro that does background work for defining a syscall at a low level. 
 
-
+**defs.h**: added definition for global use.
  
+
+## New files addes
+
+- dwalk.c
+- dwalk.h
+- dwalkmain.c
+- iwalk.c
+- iwalk.h
+- iwalkmain.c
+- compare.c
+- compare.h
+- comparemain.c
+- fsck.c
+
+
+**dwalk.c**: holds inplementation code for directory walker
+
+**dwalk.h**: hold public functions for directory walker
+
+**dwalkmain.c**: runnable program for directory walker
+
+**iwalk.c**: holds implementation code for inode walker
+
+**iwalk.h**: holds public functions for inode walker
+
+**iwalkmain.c**: runnable program for inode walker
+
+**compare.c**: implementation for comparing walker output
+
+**compare.h**: public functions for comparing
+
+**comparemain.c**: runable program for comparing
+
+**fsck.c**: filesystem checker using all above programs (not complete)
+
+
