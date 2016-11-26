@@ -1,5 +1,5 @@
+#include "compare.h"
 #include "types.h"
-#include "dwalk.h"
 #include "iwalk.h"
 #include "stat.h"
 #include "fcntl.h"
