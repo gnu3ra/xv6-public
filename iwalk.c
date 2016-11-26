@@ -36,11 +36,23 @@ main(int argc, char *argv[])
 {
   //recursion("./");
 
-  printf(1, "read superblock: %d inodes\n",icount() );
-  struct inode * test = malloc(sizeof(struct inode));
-
-  printf(1, "getinode returns %d\n",  getinode(test, 0, 10) );
-
-  printf(1, "found inode!~ inum: %d type: %d\n", test->inum, test->type);
+  int ic;
+  ic = icount();
+  printf(1, "read superblock: %d inodes\n",ic);
+  int i;
+  for(i=0;i<ic;i++) {
+  
+    struct inode * test = malloc(sizeof(struct inode));
+    
+    if(getinode(test,0,i) < 0) {
+      printf(1, "error in kernel. Plz call 555-CALL-HELP\n");
+      free(test);
+      continue;
+    }
+    else {
+      printf(1, "found inode!~ inum: %d type: %d\n", test->inum, test->type);
+      free(test);
+    }
+  }
   exit();
 }
