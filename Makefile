@@ -246,10 +246,16 @@ qemu-nox-gdb: fs.img xv6.img .gdbinit
 
 EXTRA=\
 	mkfs.c ulib.c user.h cat.c echo.c forktest.c grep.c kill.c\
-	ln.c ls.c mkdir.c rm.c stressfs.c usertests.c wc.c zombie.c test.c dwalk.c\
-	compare.c iwalk.c rdir.c printf.c umalloc.c\
+	ln.c ls.c mkdir.c rm.c stressfs.c usertests.c wc.c zombie.c test.c\
+	 rdir.c printf.c umalloc.c\
 	 dot-bochsrc *.pl toc.* runoff runoff1 runoff.list\
 	.gdbinit.tmpl gdbutil\
+
+_compare: dwalk.o iwalk.o
+
+_dwalk: dwalkmain.o
+
+_iwalk: iwalkmain.o
 
 dist:
 	rm -rf dist
