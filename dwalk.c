@@ -15,7 +15,7 @@
  */ 
 
 
-static void recursion(char*, struct unode*);
+static void recursion(char*, struct unode*, int * size);
 
 char * filecat(char * one, char * two, char sep) {
   int onelen;
@@ -39,15 +39,17 @@ char * filecat(char * one, char * two, char sep) {
 struct unode * dwalk(char* path) {
   struct unode * n = malloc(sizeof(struct unode));
   n->first = n;
-  recursion(path, n);
+  int size; 
+  recursion(path, n,&size );
   n = n->first;
+  n->size = size;
   return n;
 }
 
 
 /* basically a clone of ls, but recursive */ 
-static void recursion(char * path, struct unode * nodelist) {
-  
+static void recursion(char * path, struct unode * nodelist, int * size) {
+
   char buf[512], *p;
   int fd_tmp;
   struct dirent de;
@@ -88,6 +90,7 @@ static void recursion(char * path, struct unode * nodelist) {
     nodelist->inum = st.ino;
     nodelist->next = malloc(sizeof(struct unode));
     nodelist = nodelist->next;
+    (*size)++;
     while(read(fd, &de, sizeof(de)) == sizeof(de)){
       if(de.inum == 0)
         continue;
@@ -110,8 +113,9 @@ static void recursion(char * path, struct unode * nodelist) {
       nodelist->inum =   de.inum;
       nodelist->next = malloc(sizeof(struct unode));
       nodelist = nodelist->next;
+      (*size)++;
       if(st.type == T_DIR) {
-        recursion(chname, nodelist);
+        recursion(chname, nodelist,size);
       }
     }
     close(fd);
