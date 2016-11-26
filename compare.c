@@ -42,10 +42,3 @@ int ucompare(struct unode* first, struct unode* second) {
 }
 
 
-int main(void) {
-  struct unode * first = dwalk("/");
-  struct unode * second = iwalk();
-
-  printf(1,"compare ret value %d\n", ucompare(first,second));
-  exit();
-}

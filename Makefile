@@ -253,7 +253,7 @@ EXTRA=\
 	 dot-bochsrc *.pl toc.* runoff runoff1 runoff.list\
 	.gdbinit.tmpl gdbutil\
 
-_compare: dwalk.o iwalk.o
+_compare: comparemain.o dwalk.o iwalk.o
 
 _dwalk: dwalkmain.o
 
@@ -261,7 +261,7 @@ _iwalk: iwalkmain.o
 
 _filepuke: filepuke.o
 
-_fsck: dwalk.o iwalk.o
+_fsck: dwalk.o iwalk.o compare.o
 
 dist:
 	rm -rf dist

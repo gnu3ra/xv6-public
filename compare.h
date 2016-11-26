@@ -2,4 +2,4 @@
 
 
 
-int compare(struct unode*, struct unode*);
+int ucompare(struct unode*, struct unode*);
