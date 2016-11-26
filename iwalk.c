@@ -30,5 +30,7 @@ struct unode * iwalk(void) {
     }
     free(test);
   }
+
+  ret->size = i - 1;
   return ret;
 }
