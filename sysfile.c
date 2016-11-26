@@ -445,7 +445,7 @@ sys_pipe(void)
 
 
 int sys_getinode(void) {
-  struct inode * in;
+  void * in;
   int dev;
   int inum;
   if(argptr(0,(void*)&in, sizeof(struct inode)) < 0)
@@ -454,6 +454,9 @@ int sys_getinode(void) {
     return -2;
   if(argint(2, &inum) < 0)
     return -3;
-  in = ilookup((uint) dev, (uint)inum);
+  struct inode * tmp;
+  tmp  = ilookup((uint) dev, (uint)inum);
+
+  memmove(in, tmp, sizeof(struct inode));
   return 0; 
 }
