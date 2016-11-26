@@ -33,7 +33,7 @@ struct dinode *  openfile(char * path) {
 
 
 void help(void) {
-  printf(1, "Help! you did something wrong.\n");
+  printf(1, "type (0)\nmajor (1)\nminor (2)\nnlink (3)\nsize (4)\n");
 }
 
 void printdinode(struct dinode * in) {
@@ -41,14 +41,25 @@ void printdinode(struct dinode * in) {
   printf(1,"type: %d\nsize: %d\nlinks: %d\n",in->type, in->size, in->nlink);
 }
 
+
+void zerosingle(struct dinode * in, int index) {
+  
+}
+
 int main(int argc, char ** argv) {
 
-  if(argc < 1) {
+  if(argc < 2) {
     help();
     exit();
   }
   else {
-    printdinode(openfile(argv[1]));
+    if(argc == 2)
+      printdinode(openfile(argv[1]));
+    else if(argc >= 3) {
+      if(strcmp(argv[2], "c") == 0) {
+        
+      }
+    }
   }
   exit();
   return 0;
