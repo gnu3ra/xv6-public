@@ -232,8 +232,13 @@ iupdate(struct inode *ip)
 
 
 //public wrapper for iget
-struct inode * ilookup(uint dev, uint inum) {
-  return iget(dev, inum);
+struct dinode * ilookup(uint dev, uint inum) {
+  struct buf *bp;
+  struct dinode *dip;
+  bp = bread(dev, IBLOCK(inum, sb));
+  dip = (struct dinode*)bp->data + inum%IPB;
+  brelse(bp);
+  return dip; 
 }
 
 // Find the inode with number inum on device dev

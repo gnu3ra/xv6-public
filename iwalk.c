@@ -17,10 +17,11 @@ int
 main(int argc, char *argv[])
 {
   uint i;
-  for(i=0;i<30;i++) {
-    struct inode * test =  malloc(sizeof(struct inode));
+  for(i=1;i<icount();i++) {
+    struct dinode * test =  malloc(sizeof(struct dinode));
     getinode(test, 1, i);
-    printf(1,"flags: %d inum: %d nlink: %d\n", test->flags, test->inum, test->nlink );
+    if(test->type != 0)
+      printf(1,"type: %d inum: %d nlink: %d\n", test->type, i , test->nlink);
     free(test);
   }
   exit();

@@ -448,16 +448,16 @@ int sys_getinode(void) {
   void * in;
   int dev;
   int inum;
-  if(argptr(0,(void*)&in, sizeof(struct inode)) < 0)
+  if(argptr(0,(void*)&in, sizeof(struct dinode)) < 0)
     return -1;
   if(argint(1, &dev) < 0)
     return -2;
   if(argint(2, &inum) < 0)
     return -3;
-  struct inode * tmp;
+  struct dinode * tmp;
   tmp  = ilookup((uint) dev, (uint)inum);
 
-  memmove(in, tmp, sizeof(struct inode));
-  iput(tmp);
+  memmove(in, tmp, sizeof(struct dinode));
+//  iput(tmp);
   return 0; 
 }
