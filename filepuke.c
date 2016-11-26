@@ -43,7 +43,25 @@ void printdinode(struct dinode * in) {
 
 
 void zerosingle(struct dinode * in, int index) {
-  
+  switch(index) {
+  case 0:
+    in->type = 0;
+    break;
+  case 1:
+    in->major = 0;
+    break;
+  case 2:
+    in->minor = 0;
+    break;
+  case 3:
+    in->nlink = 0;
+    break;
+  case 4:
+    in->size = 0;
+    break;
+  default:
+    memset((void*)in, 0, sizeof(struct dinode));
+  }
 }
 
 int main(int argc, char ** argv) {
