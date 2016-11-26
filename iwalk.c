@@ -17,6 +17,7 @@ struct unode * iwalk(void) {
   struct unode * ret = out;
   out->first = ret;
   uint i;
+  int counter = 0;
   for(i=1;i<icount();i++) {
     struct dinode * test =  malloc(sizeof(struct dinode));
     getinode(test, 1, i);
@@ -27,10 +28,11 @@ struct unode * iwalk(void) {
       out->nlinks = test->nlink;
       out->next = malloc(sizeof(struct unode));
       out = out->next;
+      counter++;
     }
     free(test);
   }
 
-  ret->size = i - 1;
+  ret->size = counter;
   return ret;
 }
