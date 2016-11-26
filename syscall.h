@@ -24,3 +24,4 @@
 #define SYS_tcount 23
 #define SYS_icount 24
 #define SYS_getinode 25
+#define SYS_diropen 26

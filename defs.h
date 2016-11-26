@@ -198,3 +198,4 @@ uint getnuminodes(void);
 //functions for fsck (syscalls)
 int sys_icount(void);
 int sys_getinode(void);
+int sys_diropen(void);

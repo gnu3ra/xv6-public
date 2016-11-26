@@ -6,6 +6,7 @@
 #include "fs.h"
 #include "stat.h"
 #include "buf.h"
+#include "fcntl.h"
 #include "syscall.h"
 #include "memlayout.h"
 #include "file.h"
@@ -29,6 +30,60 @@ struct dinode *  openfile(char * path) {
   struct dinode * test =  malloc(sizeof(struct dinode));
   getinode(test, 1, st.ino);
   return test;
+}
+
+
+
+void zerodir(char * path, int offset) {
+  char buf[512], *p;
+  int fd;
+  struct dirent de;
+  struct dirent wr;
+  struct stat st;
+
+
+  wr.inum = 0;
+  int i;
+  for(i=0;i<14;i++) {
+    wr.name[i] = '\0';
+  }
+  
+  if((fd = diropen(path, O_RDWR )) < 0){
+    printf(2, "cannot open %s\n", path);
+    return ;
+  }
+  
+  if(fstat(fd, &st) < 0){
+    printf(2, "cannot stat %s\n", path);
+    close(fd);
+    return;
+  }
+  
+  
+  switch(st.type){
+  case T_FILE:
+    //file stuff
+    break;
+    
+  case T_DIR:
+    if(strlen(path) + 1 + DIRSIZ + 1 > sizeof buf){
+      printf(1, " path too long\n");
+      break;
+    }
+    strcpy(buf, path);
+    p = buf+strlen(buf);
+    *p++ = '/';
+    int counter =0;
+    do{
+      if(counter == offset) {
+        write(fd, &wr, sizeof(wr));
+        break;
+      }
+    }while (read(fd, &de, sizeof(de)) == sizeof(de));
+    close(fd);
+    break;
+  }
+  
 }
 
 
@@ -65,20 +120,10 @@ void zerosingle(struct dinode * in, int index) {
 }
 
 int main(int argc, char ** argv) {
+  if(argc == 3) {
+    zerodir(argv[1], atoi(argv[2]));
+  }
 
-  if(argc < 2) {
-    help();
-    exit();
-  }
-  else {
-    if(argc == 2)
-      printdinode(openfile(argv[1]));
-    else if(argc >= 3) {
-      if(strcmp(argv[2], "c") == 0) {
-        
-      }
-    }
-  }
   exit();
   return 0;
 }
