@@ -13,6 +13,7 @@ struct unode {
   uint childinc;
   int size;
   struct unode * first;
+  struct unode * parent;
   struct unode * next;
 }; 
 

@@ -120,7 +120,7 @@ void processlinks(void) {
   printf(1,"\n");
   
   for(i=0;i<linkssize;i++) {
-    if(linkcounts[i].count > 1)
+    if(explinkcount[i].count > 1)
       printf(1, "%d|%d ", explinkcount[i].inum, explinkcount[i].count);
     else
       printf(1, "%d ", explinkcount[i].count);
@@ -140,7 +140,7 @@ void incrementfoundlist(struct link comp ,struct lcount * explinkcount, int size
   int x;
   for(x=0;(x<size);x++) {
     if(comp.lt == explinkcount[x].inum) {
-      printf(1, "found one link before, incrementing\n");
+      //     printf(1, "found one link before, incrementing\n");
       explinkcount[x].count++;
     }
     else {
@@ -148,6 +148,7 @@ void incrementfoundlist(struct link comp ,struct lcount * explinkcount, int size
       c.count = 1;
       c.inum = comp.lt;
       if(comp.isdir == 1) {
+        printf(1, "Adding childcount %d from link [%d|%d]\n" ,comp.childinc, comp.base, comp.lt);
         c.count += comp.childinc;
       }
       explinkcount[*incounter] = c;
