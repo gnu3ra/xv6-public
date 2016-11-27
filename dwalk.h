@@ -12,8 +12,8 @@ struct unode {
   uint nlinks;
   uint childinc;
   int size;
+  int flags;
   struct unode * first;
-  struct unode * prev;
   struct unode * parent;
   struct unode * next;
 }; 

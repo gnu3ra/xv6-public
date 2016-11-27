@@ -52,8 +52,14 @@ void incrementfoundlist(struct link,struct lcount *, int, int *);
 struct link * links;
 struct lcount  * linkcounts;
 int linkcountsize;
-int linkssize; 
+int linkssize;
 int checklinks(struct unode * first, struct unode * second) {
+  if(second->size != first->size) {
+    printf(1, "Size mismatch: dwalk: %d iwalk: %d\n", first->size, second->size);
+    exit();
+  }
+  linkssize = first->size;
+  linkcountsize = first->size;
   linkcounts = malloc(sizeof(struct lcount)* second->size);
   links = malloc(sizeof(struct link) * second->size);
   
@@ -97,8 +103,10 @@ int checklinks(struct unode * first, struct unode * second) {
     counter++;
     first = first->next;
   }
-
-  linkssize = counter;
+  if(linkssize != linkcountsize) {
+    printf(1, "computed size mismatch, linkssize: %d linkscountsize: %d\n", linkssize, linkcountsize);
+    exit();
+  }
   return 0;
 }
 
