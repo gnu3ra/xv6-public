@@ -82,6 +82,26 @@ void reduce(struct lcount * real, struct lcount * fake) {
   int x;
   uint realresult = 0;
   uint fakeresult = 0;
+
+  //sort both links by inode
+  int i;
+  for(x=0;x<linkssize-1;x++) {
+    for(i=0;i<linkssize-x-1;i++) {
+      if(real[i].inum > real[i+1].inum) {
+        struct lcount tmp = real[i];
+        real[i] = real[i+1];
+        real[i+1] = tmp;
+      }
+      
+      if(fake[i].inum > fake[i+1].inum) {
+        struct lcount tmp = fake[i];
+        fake[i] = fake[i+1];
+        fake[i+1] = tmp;
+      }
+    }
+  }
+
+  
   for(x=0;x<linkssize;x++) {
     realresult += real[x].count;
   }
