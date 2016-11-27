@@ -89,7 +89,7 @@ static void recursion(char * path, struct unode * nodelist, int * size) {
       nodelist->type = st.type;
       nodelist->inum = st.ino;
       nodelist->tlinks = st.ino;
-      nodelist->nlinks = 0;
+      nodelist->nlinks = 1;
       nodelist->next = malloc(sizeof(struct unode));
       nodelist->next->childinc = 0;
       nodelist = nodelist->next;

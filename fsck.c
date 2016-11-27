@@ -22,6 +22,17 @@ struct lcount {
   uint count;
 };
 
+//dangling inode
+#define DINODE 1
+
+//dangling link
+#define DLINK 2
+
+struct fix {
+  uint inum;
+  int type; 
+};
+
 void incrementfoundlist(struct link,struct lcount *, int, int *);
 
 
@@ -78,20 +89,20 @@ int checklinks(struct unode * first, struct unode * second) {
   return 0;
 }
 
-int reduce(struct lcount * real, struct lcount * fake) {
+struct fix * reduce(struct lcount * real, struct lcount * fake) {
   int x;
   int i;
 
   //sort both links
   for(x=0;x<linkssize-1;x++) {
     for(i=0;i<linkssize-x-1;i++) {
-      if(real[i].count > real[i+1].count) {
+      if(real[i].inum > real[i+1].inum) {
         struct lcount tmp = real[i];
         real[i] = real[i+1];
         real[i+1] = tmp;
       }
 
-      if(fake[i].count > real[i+1].count) {
+      if(fake[i].inum > fake[i+1].inum) {
         struct lcount tmp = fake[i];
         fake[i] = fake[i+1];
         fake[i+1] = tmp;
@@ -99,12 +110,30 @@ int reduce(struct lcount * real, struct lcount * fake) {
     }
   }
 
-  
+  int errcount = 0;
   for(x=0;x<linkssize;x++) {
-    if(fake[x].count != real[x].count)
-      return -1;
+    printf(1, "i:%d c:%d | ", real[x].inum, real[x].count);
+    if(fake[x].count != real[x].count) {
+      errcount++;
+    }
   }
-  return 0;
+  printf(1, "\n");
+  for(x=0;x<linkssize;x++) {
+    printf(1, "i:%d c:%d | ", fake[x].inum, fake[x].count);
+    if(fake[x].count != real[x].count) {
+      errcount++;
+    }
+  }
+  printf(1, "\n");
+  struct fix * retval = malloc(sizeof(struct fix)*errcount);
+  if(errcount > 0) {
+    for(x=0;x<linkssize;x++) {
+      if(fake[x].count != real[x].count) {
+        printf(1, "FIXME: [%d:%d] dircount: %d icount: %d\n", fake[x].inum,real[x].inum, fake[x].count, real[x].count);
+      }
+    }
+  }
+  return retval;
 }
 
 
@@ -112,7 +141,8 @@ int processlinks(void) {
   int i;
   int linktotal = 0;
   for(i=0;i<linkcountsize;i++) {
-    linktotal += linkcounts[i].count; 
+    linktotal += linkcounts[i].count;
+    printf(1, "li: %d  ", links[i].lt);
   }
 
   
@@ -140,8 +170,8 @@ int processlinks(void) {
   }
   printf(1,"\n");
 
-  return reduce(linkcounts, explinkcount);
-  
+  reduce(linkcounts, explinkcount);
+  return 999;  
 }
 
 
