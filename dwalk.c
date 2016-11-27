@@ -15,7 +15,7 @@
  */ 
 
 
-static void recursion(char*, struct unode*, int * size);
+static void recursion(char*, struct unode*, int *, struct unode*);
 
 char * filecat(char * one, char * two, char sep) {
   int onelen;
@@ -39,8 +39,9 @@ char * filecat(char * one, char * two, char sep) {
 struct unode * dwalk(char* path) {
   struct unode * n = malloc(sizeof(struct unode));
   n->first = n;
+  n->prev = 0x0;
   int size = 0; 
-  recursion(path, n,&size);
+  recursion(path, n,&size, n);
   n = n->first;
   n->size = size;
   return n;
@@ -48,7 +49,7 @@ struct unode * dwalk(char* path) {
 
 
 /* basically a clone of ls, but recursive */ 
-static void recursion(char * path, struct unode * nodelist, int * size) {
+static void recursion(char * path, struct unode * nodelist, int * size, struct unode * parentcandidate) {
 
   char buf[512], *p;
   int fd_tmp;
@@ -96,11 +97,9 @@ static void recursion(char * path, struct unode * nodelist, int * size) {
       nodelist = nodelist->next;
       (*size)++;
     }
-
-    struct unode * parentcandidate;
-    parentcandidate = nodelist;
     uint dinum = st.ino;
     int numdirs = 0;
+    printf(1, "parent candidate %d\n", parentcandidate->inum);
     while(read(fd, &de, sizeof(de)) == sizeof(de)){
       if(de.inum == 0)
         continue;
@@ -128,14 +127,14 @@ static void recursion(char * path, struct unode * nodelist, int * size) {
       nodelist->tlinks = dinum;
       nodelist->next = malloc(sizeof(struct unode));
       nodelist->next->parent = parentcandidate ;
-     
+      struct unode * tmp = nodelist;
       nodelist = nodelist->next;
       (*size)++;
       if(st.type == T_DIR) {
         numdirs++;
-        recursion(chname, nodelist,size);
+        recursion(chname, nodelist,size,tmp );
 
-        printf(1,"incing %s prevsize: %d\n", de.name , numdirs);
+        printf(1,"incing %s inum: %d prevsize: %d\n", de.name , nodelist->parent->inum, numdirs);
         nodelist->parent->childinc = numdirs;
       
       }

@@ -110,19 +110,21 @@ void processlinks(void) {
   for(i=0;i<linkssize;i++) {
     incrementfoundlist(links[i],explinkcount,linkcountsize ,&incounter);
   }
-
+  printf(1,"real:\n");
   for(i=0;i<linkssize;i++) {
-    if(linkcounts[i].count > 1)
-      printf(1, "%d|%d ", linkcounts[i].inum, linkcounts[i].count);
-    else
-      printf(1, "%d ", linkcounts[i].count);
+      printf(1, "%d ", linkcounts[i].inum);
   }
   printf(1,"\n");
-  
+
   for(i=0;i<linkssize;i++) {
-    if(explinkcount[i].count > 1)
-      printf(1, "%d|%d ", explinkcount[i].inum, explinkcount[i].count);
-    else
+    printf(1, "%d ", linkcounts[i].count);
+  }
+  printf(1,"\nfake:\n");
+  for(i=0;i<linkssize;i++) {
+      printf(1, "%d ", explinkcount[i].inum);
+  }
+  printf(1,"\n");
+  for(i=0;i<linkssize;i++) {
       printf(1, "%d ", explinkcount[i].count);
   }
   printf(1,"\n");
