@@ -13,6 +13,7 @@
 struct link {
   uint lt;
   uint base;
+  int childinc;
   char isdir; 
 };
 
@@ -21,7 +22,7 @@ struct lcount {
   uint count;
 };
 
-void incrementfoundlist(int,struct lcount *, int, int *);
+void incrementfoundlist(struct link,struct lcount *, int, int *);
 
 
 struct link * links;
@@ -63,6 +64,7 @@ int checklinks(struct unode * first, struct unode * second) {
     struct link i;
     i.base = first->tlinks;
     i.lt = first->nlinks;
+    i.childinc = first->childinc;
     if(first->type == T_DIR)
       i.isdir = 1;
     else
@@ -91,22 +93,7 @@ void processlinks(void) {
   incounter = 0;
   //sizes should be the salt
   for(i=0;i<linkssize;i++) {
-    uint compare = links[i].lt; 
-    incrementfoundlist(compare,explinkcount,linkcountsize ,&incounter);
-    
-    /*
-    if(links[i].isdir == 1) {
-      int k;
-      printf(1,"searching directory\n");
-      //search the list for the parent and increltnt link count
-      for(k=0;k<linkssize;k++) {
-        if(links[i].lt == links[k].base) {
-          printf(1, "found parent\n");
-        }
-      }
-    }
-
-    */
+    incrementfoundlist(links[i],explinkcount,linkcountsize ,&incounter);
   }
 
   for(i=0;i<linkssize;i++) {
@@ -126,17 +113,20 @@ void processlinks(void) {
 }
 
 
-void incrementfoundlist(int compare,struct lcount * explinkcount, int size, int * incounter ) {
+void incrementfoundlist(struct link comp ,struct lcount * explinkcount, int size, int * incounter ) {
   int x;
   for(x=0;(x<size);x++) {
-    if(compare == explinkcount[x].inum) {
+    if(comp.lt == explinkcount[x].inum) {
       printf(1, "found one link before, incrementing\n");
       explinkcount[x].count++;
     }
     else {
       struct lcount c;
       c.count = 1;
-      c.inum = compare; 
+      c.inum = comp.lt;
+      if(comp.isdir == 1) {
+        c.count += comp.childinc;
+      }
       explinkcount[*incounter] = c;
       (*incounter)++;
       break;

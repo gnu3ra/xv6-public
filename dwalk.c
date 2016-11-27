@@ -91,6 +91,7 @@ static void recursion(char * path, struct unode * nodelist, int * size) {
       nodelist->tlinks = st.ino;
       nodelist->nlinks = 0;
       nodelist->next = malloc(sizeof(struct unode));
+      nodelist->next->childinc = 0;
       nodelist = nodelist->next;
       (*size)++;
     }
@@ -108,8 +109,9 @@ static void recursion(char * path, struct unode * nodelist, int * size) {
       }
 
       
-      if(strcmp(de.name, "..")== 0)
+      if(strcmp(de.name, "..")== 0) {
         continue;
+      }
       if(strcmp(de.name, ".") == 0)
         continue;
 
@@ -121,6 +123,10 @@ static void recursion(char * path, struct unode * nodelist, int * size) {
       nodelist->nlinks = de.inum;
       nodelist->tlinks = dinum;
       nodelist->next = malloc(sizeof(struct unode));
+      nodelist->next->childinc = 0;
+      if(st.type == T_DIR) {
+        nodelist->childinc++;
+      }
       nodelist = nodelist->next;
       (*size)++;
       if(st.type == T_DIR) {

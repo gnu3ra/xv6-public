@@ -10,6 +10,7 @@ struct unode {
   uint type;
   uint tlinks;
   uint nlinks;
+  uint childinc;
   int size;
   struct unode * first;
   struct unode * next;
