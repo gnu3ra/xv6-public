@@ -137,8 +137,11 @@ void reduce(struct lcount * real, struct lcount * fake) {
   for(x=0;x<linkssize;x++) {
     realresult += real[x].count;
     fakeresult += fake[x].count;
+    if(fake[x].count != real[x].count) {
+      printf(1,"FIXME: mismatched inode at [%d|%d]\n",real[x].inum, fake[x].inum);
+    }
   }
-
+//
   printf(1, "[reduce] real: %d fake: %d\n",realresult, fakeresult);
 }
 
