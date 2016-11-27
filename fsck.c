@@ -15,44 +15,86 @@ struct link {
   uint ifrom;
 };
 
-
+struct lcount {
+  uint inum;
+  uint count;
+};
 
 struct link * links;
-uint  * linkcounts;
-
+struct lcount  * linkcounts;
+int linkcountsize;
+int linkssize; 
 int checklinks(struct unode * first, struct unode * second) {
-  linkcounts = malloc(sizeof(uint)* second->size);
+  linkcounts = malloc(sizeof(struct lcount)* second->size);
   links = malloc(sizeof(struct link) * second->size);
   
   int root;
   int counter;
   root = 0;
   counter = 0;
-  while(first->next != 0x0) {
+
+  //walk over inodes and find link counts
+  while(second->next != 0x0) {
     //printf(1, "loop 1\n");
-    if(first->nlinks == 0) {
+    if(second->nlinks == 0) {
       root++;
     }
     if(root > 1)
       return -1;
-    
-    linkcounts[counter] = first->nlinks;
-    counter++;
-    first = first->next;
-    
-  }
-  counter = 0;
-  while(second->next != 0x0) {
-    //printf(1, "loop 2\n");
-    struct link i;
-    i.ifrom = second->tlinks;
-    i.ito = second->nlinks;
-    links[counter] = i;
+    struct lcount l;
+    l.count = second->nlinks;
+    l.inum = second->inum;
+    linkcounts[counter] = l;
     counter++;
     second = second->next;
+    
   }
+
+  linkcountsize = counter;
+  counter = 0;
+
+  //walk over directories and find what links to waht
+  while(first->next != 0x0) {
+    //printf(1, "loop 2\n");
+    struct link i;
+    i.ifrom = first->tlinks;
+    i.ito = first->nlinks;
+    links[counter] = i;
+    counter++;
+    first = first->next;
+  }
+
+  linkssize = counter;
   return 0;
 }
+
+void processlinks(void) {
+  int i;
+  int linktotal = 0;
+  for(i=0;i<linkcountsize;i++) {
+    linktotal += linkcounts[i].count; 
+  }
+
+  struct lcount * explinkcount;
+  explinkcount = malloc(sizeof(struct lcount) * linkcountsize);
+  printf(1, "total links (iwalk) %d\n" , linktotal);
+
+  int x;
+  //sizes should be the same
+  for(i=0;i<linkssize;i++) {
+    int tmpexp = 0;
+    for(x=0;x<linkssize;x++) {
+      if(links[x].ifrom == links[i].ito)
+        tmpexp++;
+    }
+    struct lcount n;
+    n.count = tmpexp;
+    n.inum = links[i].ito;
+    explinkcount[i] = n;
+  }
+  
+}
+
 
 int main(void) {
   struct unode * first = dwalk("/");
