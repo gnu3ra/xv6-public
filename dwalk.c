@@ -100,7 +100,7 @@ static struct unode * recursion(char * path, struct unode * nodelist, int * size
     int dot = 0;
     int dotdot = 0;
     int numdirs = 0;
-    printf(1, "parent candidate %d\n", parentcandidate->inum);
+    // printf(1, "parent candidate %d\n", parentcandidate->inum);
     while(read(fd, &de, sizeof(de)) == sizeof(de)){
       if(de.inum == 0)
         continue;
@@ -113,7 +113,7 @@ static struct unode * recursion(char * path, struct unode * nodelist, int * size
       }
       char * chname;
       chname = filecat(path, de.name, '/');
-      printf(1, "crawling unfiltered %s\n" ,chname);
+      //printf(1, "crawling unfiltered %s\n" ,chname);
       
       if(strcmp(de.name, "..")== 0) {
         dotdot++;
@@ -125,7 +125,7 @@ static struct unode * recursion(char * path, struct unode * nodelist, int * size
       }
       nodelist->type = st.type;
       nodelist->inum =   st.ino;
-      printf(1, "crawling %s inum: %d\n" ,chname, st.ino);
+      //printf(1, "crawling %s inum: %d\n" ,chname, st.ino);
       nodelist->nlinks = de.inum;
       nodelist->tlinks = dinum;
       nodelist->next = malloc(sizeof(struct unode));
@@ -136,7 +136,7 @@ static struct unode * recursion(char * path, struct unode * nodelist, int * size
       
       if(st.type == T_DIR) {
         
-        printf(1,"incing %s inum: %d", de.name , nodelist->parent->inum);
+        //printf(1,"incing %s inum: %d", de.name , nodelist->parent->inum);
         parentcandidate->childinc++;
         numdirs++;
         nodelist =  recursion(chname, nodelist,size,tmp );
