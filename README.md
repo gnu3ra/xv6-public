@@ -57,7 +57,7 @@ I changed these files to add the syscalls
 - compare.h
 - comparemain.c
 - fsck.c
-
+- filepuke.c
 
 **dwalk.c**: holds inplementation code for directory walker
 
@@ -79,4 +79,4 @@ I changed these files to add the syscalls
 
 **fsck.c**: filesystem checker using all above programs (not complete)
 
-
+**filepuke.c**: erases parts of directories
