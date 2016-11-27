@@ -47,6 +47,49 @@ struct unode * dwalk(char* path) {
 }
 
 
+int countdirs( char * path) {
+  //printf(1, "starting count %s\n" ,path);
+  int fd;
+  struct dirent de;
+  int counter = 0;
+  char buf[512], *p;
+  struct stat st;
+
+  if((fd= open(path, 0)) < 0){
+    printf(2, "cannot open %s\n", path);
+    return 0;
+  }
+
+  
+  strcpy(buf, path);
+  p = buf+strlen(buf);
+  *p++ = '/';
+  
+  while(read(fd, &de, sizeof(de)) == sizeof(de)){
+
+    
+    memmove(p, de.name, DIRSIZ);
+    p[DIRSIZ] = 0;
+    if(stat(buf, &st) < 0){
+        printf(1, "cannot stat %s\n", buf);
+        continue;
+    }
+
+    if(strcmp(de.name, "..")== 0) {
+      continue;
+    }
+    if(strcmp(de.name, ".") == 0)
+      continue;
+    if(st.type == T_DIR && de.inum != 0) {
+      printf(1, "counting %s %d\n" , de.name, de.inum);
+      counter++;
+    }
+  }
+  close(fd);
+  return counter;
+}
+
+
 /* basically a clone of ls, but recursive */ 
 static void recursion(char * path, struct unode * nodelist, int * size) {
 
@@ -97,6 +140,7 @@ static void recursion(char * path, struct unode * nodelist, int * size) {
     }
 
     uint dinum = st.ino;
+    int dircount =  countdirs(path);
     while(read(fd, &de, sizeof(de)) == sizeof(de)){
       if(de.inum == 0)
         continue;
@@ -124,13 +168,12 @@ static void recursion(char * path, struct unode * nodelist, int * size) {
       nodelist->tlinks = dinum;
       nodelist->next = malloc(sizeof(struct unode));
       nodelist->next->childinc = 0;
-      if(st.type == T_DIR) {
-        nodelist->childinc++;
-      }
       nodelist = nodelist->next;
       (*size)++;
       if(st.type == T_DIR) {
-        recursion(chname, nodelist,size);
+        nodelist->childinc = dircount ;
+        printf(1, "running childinc %d\n",nodelist->childinc);
+        recursion(chname, nodelist,size);      
       }
     }
     close(fd);

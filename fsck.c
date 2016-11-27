@@ -112,14 +112,14 @@ struct fix * reduce(struct lcount * real, struct lcount * fake) {
 
   int errcount = 0;
   for(x=0;x<linkssize;x++) {
-    printf(1, "i:%d c:%d | ", real[x].inum, real[x].count);
+    printf(1, "%d ", real[x].count);
     if(fake[x].count != real[x].count) {
       errcount++;
     }
   }
   printf(1, "\n");
   for(x=0;x<linkssize;x++) {
-    printf(1, "i:%d c:%d | ", fake[x].inum, fake[x].count);
+    printf(1, "%d ", fake[x].count);
     if(fake[x].count != real[x].count) {
       errcount++;
     }
