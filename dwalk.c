@@ -93,7 +93,7 @@ static void recursion(char * path, struct unode * nodelist, int * size, struct u
       nodelist->nlinks = 1;
       nodelist->next = malloc(sizeof(struct unode));
       nodelist->next->parent = nodelist;
-      nodelist->childinc = 1;
+      nodelist->childinc = 0;
       nodelist = nodelist->next;
       (*size)++;
     }
