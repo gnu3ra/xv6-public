@@ -10,61 +10,46 @@
 #include "memlayout.h"
 
 
-struct dirlink {
-  uint dirnum;
-  uint linkto; 
-};
-
-struct filelink {
-  uint filenum;
-  uint numlinks; 
+struct link {
+  uint ito;
+  uint ifrom;
 };
 
 
 
-struct filelink * files;
-struct dirlink * dirs;
-
-uint filecounter;
-uint dircounter;
-uint devcounter;
-uint othercounter;
+struct link * links;
+uint  * linkcounts;
 
 int checklinks(struct unode * first, struct unode * second) {
-  dirs = malloc(sizeof(struct dirlink)*dircounter);
-  files = malloc(sizeof(struct filelink) * filecounter);
-
-  int fcounter;
-  int dcounter;
-  fcounter = 0;
-  dcounter = 0;
+  linkcounts = malloc(sizeof(uint)* second->size);
+  links = malloc(sizeof(struct link) * second->size);
+  
   int root;
+  int counter;
   root = 0;
+  counter = 0;
   while(first->next != 0x0) {
-    struct dirlink f;
+    //printf(1, "loop 1\n");
     if(first->nlinks == 0) {
       root++;
-      continue;
     }
     if(root > 1)
       return -1;
-    f.dirnum = first->inum;
-    f.linkto = first->nlinks;
-    dirs[dcounter] = f;
-    dcounter++;
+    
+    linkcounts[counter] = first->nlinks;
+    counter++;
     first = first->next;
     
   }
-
-  fcounter = 0;
-  dcounter = 0;
+  counter = 0;
   while(second->next != 0x0) {
-    struct filelink i;
-    i.filenum = second->inum;
-    i.numlinks = second->nlinks;
+    //printf(1, "loop 2\n");
+    struct link i;
+    i.ifrom = second->tlinks;
+    i.ito = second->nlinks;
+    links[counter] = i;
+    counter++;
     second = second->next;
-    files[fcounter] = i;
-    fcounter++;
   }
   return 0;
 }
@@ -77,28 +62,12 @@ int main(void) {
   
   printf(1,"compare ret value %d\n", ucompare(first,second));
 
-  filecounter = 0;
-  dircounter = 0;
-  devcounter = 0;
-  othercounter = 0;
-  struct unode * dw_enum;
-  dw_enum = dw;
-  while(dw_enum->next != 0x0) {
-    if(dw_enum->type == T_FILE)
-      filecounter++;
-    if(dw_enum->type == T_DIR)
-      dircounter++;
-    if(dw_enum->type == T_DEV)
-      devcounter++;
-    else 
-      othercounter++;
-    dw_enum = dw_enum->next;
-  }
-
   struct unode * dw_check;
   struct unode * iw_check;
   iw_check = iw;
   dw_check = dw;
+
+  printf(1, "Starting link check\n");
   checklinks(dw_check, iw_check);
   
   exit();

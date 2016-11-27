@@ -8,6 +8,7 @@
 struct unode {
   uint inum;
   uint type;
+  uint tlinks;
   uint nlinks;
   int size;
   struct unode * first;

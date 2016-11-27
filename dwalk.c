@@ -88,11 +88,14 @@ static void recursion(char * path, struct unode * nodelist, int * size) {
     if((*size)==0) {
       nodelist->type = st.type;
       nodelist->inum = st.ino;
+      nodelist->tlinks = st.ino;
       nodelist->nlinks = 0;
       nodelist->next = malloc(sizeof(struct unode));
       nodelist = nodelist->next;
       (*size)++;
     }
+
+    uint dinum = st.ino;
     while(read(fd, &de, sizeof(de)) == sizeof(de)){
       if(de.inum == 0)
         continue;
@@ -113,7 +116,9 @@ static void recursion(char * path, struct unode * nodelist, int * size) {
       chname = filecat(path, de.name, '/');
       nodelist->type = st.type;
       nodelist->inum =   st.ino;
+      
       nodelist->nlinks = de.inum;
+      nodelist->tlinks = dinum;
       nodelist->next = malloc(sizeof(struct unode));
       nodelist = nodelist->next;
       (*size)++;
