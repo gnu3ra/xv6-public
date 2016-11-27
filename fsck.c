@@ -78,6 +78,21 @@ int checklinks(struct unode * first, struct unode * second) {
   return 0;
 }
 
+void reduce(struct lcount * real, struct lcount * fake) {
+  int x;
+  uint realresult = 0;
+  uint fakeresult = 0;
+  for(x=0;x<linkssize;x++) {
+    realresult += real[x].count;
+  }
+  for(x=0;x<linkssize;x++) {
+    fakeresult += fake[x].count;
+  }
+
+  printf(1, "[reduce] real: %d fake: %d\n",realresult, fakeresult);
+}
+
+
 void processlinks(void) {
   int i;
   int linktotal = 0;
@@ -109,6 +124,8 @@ void processlinks(void) {
     printf(1, "%d->%d ", links[i].base, links[i].lt);
   }
   printf(1,"\n");
+
+  reduce(linkcounts, explinkcount);
   
 }
 
