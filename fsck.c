@@ -22,6 +22,30 @@ struct lcount {
   uint count;
 };
 
+
+/* orphaned inode: an inode with no link pointing to it. 
+ * detected by an inode being alocated, but with a link count of zero. 
+ * fixed by creating tmp directory and linking from there. 
+ */
+#define ORPHAN 1
+
+/* 
+ * danlging links: a link with no inode at the end. Nothing to do but clear it. 
+ */
+#define DLINK 2
+
+/*
+ * link mismatch: the inode's link count is different from the measured one
+ * in the directory tree. Better trust the tree and reset the inode
+ */
+#define LMISMATCH 3
+
+
+struct fixme {
+  int inum;
+  int type;
+};
+
 void incrementfoundlist(struct link,struct lcount *, int, int *);
 
 
@@ -104,8 +128,6 @@ void reduce(struct lcount * real, struct lcount * fake) {
   
   for(x=0;x<linkssize;x++) {
     realresult += real[x].count;
-  }
-  for(x=0;x<linkssize;x++) {
     fakeresult += fake[x].count;
   }
 
