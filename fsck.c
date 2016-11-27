@@ -110,7 +110,9 @@ int main(void) {
   dw_check = dw;
 
   printf(1, "Starting link check\n");
-  checklinks(dw_check, iw_check);
+  if(checklinks(dw_check, iw_check)==0) {
+    processlinks();
+  }
   
   exit();
 }
