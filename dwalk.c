@@ -107,6 +107,7 @@ static void recursion(char * path, struct unode * nodelist, int * size) {
         continue;
       }
 
+      
       if(strcmp(de.name, "..")== 0)
         continue;
       if(strcmp(de.name, ".") == 0)

@@ -11,14 +11,18 @@
 
 
 struct link {
-  uint ito;
-  uint ifrom;
+  uint lt;
+  uint base;
+  char isdir; 
 };
 
 struct lcount {
   uint inum;
   uint count;
 };
+
+void incrementfoundlist(int,struct lcount *, int, int *);
+
 
 struct link * links;
 struct lcount  * linkcounts;
@@ -57,8 +61,12 @@ int checklinks(struct unode * first, struct unode * second) {
   while(first->next != 0x0) {
     //printf(1, "loop 2\n");
     struct link i;
-    i.ifrom = first->tlinks;
-    i.ito = first->nlinks;
+    i.base = first->tlinks;
+    i.lt = first->nlinks;
+    if(first->type == T_DIR)
+      i.isdir = 1;
+    else
+      i.isdir = 0;
     links[counter] = i;
     counter++;
     first = first->next;
@@ -75,26 +83,66 @@ void processlinks(void) {
     linktotal += linkcounts[i].count; 
   }
 
+  
   struct lcount * explinkcount;
   explinkcount = malloc(sizeof(struct lcount) * linkcountsize);
   printf(1, "total links (iwalk) %d\n" , linktotal);
-
-  int x;
-  //sizes should be the same
+  int incounter;
+  incounter = 0;
+  //sizes should be the salt
   for(i=0;i<linkssize;i++) {
-    int tmpexp = 0;
-    for(x=0;x<linkssize;x++) {
-      if(links[x].ifrom == links[i].ito)
-        tmpexp++;
+    uint compare = links[i].lt; 
+    incrementfoundlist(compare,explinkcount,linkcountsize ,&incounter);
+    
+    /*
+    if(links[i].isdir == 1) {
+      int k;
+      printf(1,"searching directory\n");
+      //search the list for the parent and increltnt link count
+      for(k=0;k<linkssize;k++) {
+        if(links[i].lt == links[k].base) {
+          printf(1, "found parent\n");
+        }
+      }
     }
-    struct lcount n;
-    n.count = tmpexp;
-    n.inum = links[i].ito;
-    explinkcount[i] = n;
+
+    */
   }
+
+  for(i=0;i<linkssize;i++) {
+    printf(1, "%d ", linkcounts[i].count);
+  }
+  printf(1,"\n");
+  
+  for(i=0;i<linkssize;i++) {
+    printf(1, "%d ", explinkcount[i].count);
+  }
+  printf(1,"\n");
+  for(i=0;i<linkssize;i++) {
+    printf(1, "%d->%d ", links[i].base, links[i].lt);
+  }
+  printf(1,"\n");
   
 }
 
+
+void incrementfoundlist(int compare,struct lcount * explinkcount, int size, int * incounter ) {
+  int x;
+  for(x=0;(x<size);x++) {
+    if(compare == explinkcount[x].inum) {
+      printf(1, "found one link before, incrementing\n");
+      explinkcount[x].count++;
+    }
+    else {
+      struct lcount c;
+      c.count = 1;
+      c.inum = compare; 
+      explinkcount[*incounter] = c;
+      (*incounter)++;
+      break;
+    }
+  }  
+}
 
 int main(void) {
   struct unode * first = dwalk("/");
