@@ -78,22 +78,37 @@ int checklinks(struct unode * first, struct unode * second) {
   return 0;
 }
 
-void reduce(struct lcount * real, struct lcount * fake) {
+int reduce(struct lcount * real, struct lcount * fake) {
   int x;
-  uint realresult = 0;
-  uint fakeresult = 0;
-  for(x=0;x<linkssize;x++) {
-    realresult += real[x].count;
-  }
-  for(x=0;x<linkssize;x++) {
-    fakeresult += fake[x].count;
+  int i;
+
+  //sort both links
+  for(x=0;x<linkssize-1;x++) {
+    for(i=0;i<linkssize-x-1;i++) {
+      if(real[i].count > real[i+1].count) {
+        struct lcount tmp = real[i];
+        real[i] = real[i+1];
+        real[i+1] = tmp;
+      }
+
+      if(fake[i].count > real[i+1].count) {
+        struct lcount tmp = fake[i];
+        fake[i] = fake[i+1];
+        fake[i+1] = tmp;
+      }
+    }
   }
 
-  printf(1, "[reduce] real: %d fake: %d\n",realresult, fakeresult);
+  
+  for(x=0;x<linkssize;x++) {
+    if(fake[x].count != real[x].count)
+      return -1;
+  }
+  return 0;
 }
 
 
-void processlinks(void) {
+int processlinks(void) {
   int i;
   int linktotal = 0;
   for(i=0;i<linkcountsize;i++) {
@@ -125,7 +140,7 @@ void processlinks(void) {
   }
   printf(1,"\n");
 
-  reduce(linkcounts, explinkcount);
+  return reduce(linkcounts, explinkcount);
   
 }
 
@@ -134,7 +149,7 @@ void incrementfoundlist(struct link comp ,struct lcount * explinkcount, int size
   int x;
   for(x=0;(x<size);x++) {
     if(comp.lt == explinkcount[x].inum) {
-      printf(1, "found one link before, incrementing\n");
+      //    printf(1, "found one link before, incrementing\n");
       explinkcount[x].count++;
     }
     else {
@@ -166,7 +181,7 @@ int main(void) {
 
   printf(1, "Starting link check\n");
   if(checklinks(dw_check, iw_check)==0) {
-    processlinks();
+    printf(1, "processlinks ret %d\n", processlinks());
   }
   
   exit();
