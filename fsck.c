@@ -300,8 +300,67 @@ void incrementfoundlist(struct link comp ,struct lcount * explinkcount, int size
   }  
 }
 
-void repairorphans(void);
-void repairorphans(void) {
+
+char * itoa(int integer) {
+  char * ascii = malloc(sizeof(char)*20); //scaaaary
+  int temp,count=0,i,cnd=0;
+  if(integer>>31)
+  {
+    integer=~integer+1;
+    for(temp=integer;temp!=0;temp/=10,count++);
+    ascii[0]=0x2D;
+    count++;
+    cnd=1;
+  }
+  else
+    for(temp=integer;temp!=0;temp/=10,count++);
+  for(i=count-1,temp=integer;i>=cnd;i--)
+  {
+
+    ascii[i]=(temp%10)+0x30;
+    temp/=10;
+  }
+
+  return ascii;
+}
+
+
+/* this would be better if lists were sorted, but no time and 
+ * they already are on an unused filesystem 
+ */ 
+void repairorphans(struct unode * dwalkin, struct unode * iwalkin) {
+  printf(1,"check 1\n");
+  struct unode * dwalk = dwalkin->first;
+  struct unode * iwalk = iwalkin->first;
+  struct unode * dwalkreset = dwalkin->first;
+  int dsize = dwalk->size;
+  int isize = iwalk->size;
+  printf(1,"check 2 (size %d %d)\n", dwalk->size, iwalk->size);
+  struct dirent * inods = malloc(sizeof(struct dirent) * (isize -  dsize + 1));
+  int counter = 0;
+  int engage = 1;
+  while(iwalk != 0x0) {
+    engage = 1;
+    while(dwalk != 0x0){
+      if(dwalk->inum == iwalk->inum) {
+        engage = 0;
+      }
+      dwalk = dwalk->next;
+    }
+    if(engage==1) {
+      printf(1, "selecting inode to repair\n");
+      struct dirent d;
+      d.inum = iwalk->inum;
+      strcpy( d.name, itoa(iwalk->inum));
+      inods[counter] = d;
+      counter++;
+    }
+    dwalk = dwalkreset;
+    iwalk = iwalk->next;
+  }
+
+  printf(1,"relinking %d inodes\n", counter);
+  writedir("/RECOVER", inods,counter );
   return;
 }
 
@@ -324,7 +383,7 @@ int main(void) {
   if(cmpr == -1) {
     if(first->size < second->size) {
       printf(1, "orphaned inodes detected: cleaning\n");
-      repairorphans();
+      repairorphans(first, second);
     }
   }
   
