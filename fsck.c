@@ -152,7 +152,10 @@ int writedir(char * path, struct dirent * entries, int size) {
   struct dirent de;
   struct stat st;
 
-  if((fd = diropen(path, O_RDWR )) < 0){
+
+  mkdir(path);
+  
+  if((fd = diropen(path, O_RDWR)) < 0){
     printf(2, "cannot open %s\n", path);
     return -2;
   }
@@ -200,7 +203,7 @@ int writedir(char * path, struct dirent * entries, int size) {
     close(fd);
 
 
-    if((fd = diropen(path, O_RDWR  )) < 0){
+    if((fd = diropen(path, O_RDWR)) < 0){
       printf(2, "cannot open %s\n", path);
       return -2;
     }
@@ -210,12 +213,18 @@ int writedir(char * path, struct dirent * entries, int size) {
       close(fd);
       return -3;
     }
-    
+
     
     int x;
     for(x=0;x<counter;x++) {
+      printf(1,"[stage 1] writing %s\n", dirbuf[x].name);
       //do this once we know what is in the file
       write(fd, &(dirbuf[x]), sizeof(de));
+    }
+
+    for(x=0;x<size;x++) {
+      printf(1,"[stage 2] writing %s\n", dirbuf[x].name);
+      write(fd, &(entries[x]), sizeof(entries[x]));
     }
     break;
   }
@@ -298,6 +307,12 @@ void repairorphans(void) {
 
 int main(void) {
 
+//  struct dirent t[1];
+//  t[0].inum = 4;
+//  t[0].name[0] = 'y';
+//  t[0].name[1] = '\0';
+//  writedir("/gooo" ,t, 1);
+  
   struct unode * first = dwalk("/");
   struct unode * second = iwalk();
   struct unode * dw = first;
