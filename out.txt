@@ -1,0 +1,70 @@
+$ ./rdir
+$ ./filepuke uiop 3
+writing to de entry [yuio]
+$ ./fsck
+second: 28, first: 26
+compare ret value -1
+orphaned inodes detected: cleaning
+check 1
+check 2 (size 26 28)
+selecting inode to repair
+selecting inode to repair
+selecting inode to repair
+selecting inode to repair
+selecting inode to repair
+selecting inode to repair
+selecting inode to repair
+selecting inode to repair
+selecting inode to repair
+selecting inode to repair
+selecting inode to repair
+selecting inode to repair
+selecting inode to repair
+selecting inode to repair
+selecting inode to repair
+selecting inode to repair
+selecting inode to repair
+selecting inode to repair
+selecting inode to repair
+selecting inode to repair
+selecting inode to repair
+selecting inode to repair
+selecting inode to repair
+selecting inode to repair
+selecting inode to repair
+selecting inode to repair
+selecting inode to repair
+selecting inode to repair
+relinking 28 inodes
+[stage 1] writing .
+[stage 1] writing ..
+[stage 2] writing .
+[stage 2] writing ..
+[stage 2] writing
+[stage 2] writing
+[stage 2] writing
+[stage 2] writing
+[stage 2] writing
+[stage 2] writing
+[stage 2] writing
+[stage 2] writing
+[stage 2] writing
+[stage 2] writing
+[stage 2] writing
+[stage 2] writing
+[stage 2] writing
+[stage 2] writing
+[stage 2] writing
+[stage 2] writing
+[stage 2] writing
+[stage 2] writing
+[stage 2] writing
+[stage 2] writing
+[stage 2] writing
+[stage 2] writing
+[stage 2] writing
+[stage 2] writing
+[stage 2] writing
+[stage 2] writing
+Starting link check
+pid 5 fsck: trap 14 err 4 on cpu 1 eip 0x145 addr 0x658de499--kill proc
