@@ -20,6 +20,7 @@ struct link {
 struct lcount {
   uint inum;
   uint count;
+  uint lt;
 };
 
 
@@ -56,7 +57,7 @@ int linkssize;
 int checklinks(struct unode * first, struct unode * second) {
   if(second->size != first->size) {
     printf(1, "Size mismatch: dwalk: %d iwalk: %d\n", first->size, second->size);
-    exit();
+    //exit();
   }
   linkssize = first->size;
   linkcountsize = first->size;
@@ -105,7 +106,7 @@ int checklinks(struct unode * first, struct unode * second) {
   }
   if(linkssize != linkcountsize) {
     printf(1, "computed size mismatch, linkssize: %d linkscountsize: %d\n", linkssize, linkcountsize);
-    exit();
+    //exit();
   }
   return 0;
 }
@@ -138,7 +139,7 @@ void reduce(struct lcount * real, struct lcount * fake) {
     realresult += real[x].count;
     fakeresult += fake[x].count;
     if(fake[x].count != real[x].count) {
-      printf(1,"FIXME: mismatched inode at [%d|%d]\n",real[x].inum, fake[x].inum);
+      printf(1,"FIXME: mismatched inode at [%d|%d] child: %d\n",real[x].inum, fake[x].inum, fake[x].lt);
     }
   }
 //
@@ -159,7 +160,7 @@ void processlinks(void) {
   printf(1, "total links (iwalk) %d\n" , linktotal);
   int incounter;
   incounter = 0;
-  //sizes should be the salt
+  //sizes should be the same
   for(i=0;i<linkssize;i++) {
     incrementfoundlist(links[i],explinkcount,linkcountsize ,&incounter);
   }
@@ -202,6 +203,7 @@ void incrementfoundlist(struct link comp ,struct lcount * explinkcount, int size
       struct lcount c;
       c.count = 1;
       c.inum = comp.lt;
+      c.lt = comp.base;
       if(comp.isdir == 1) {
         printf(1, "Adding childcount %d from link [%d|%d]\n" ,comp.childinc, comp.base, comp.lt);
         c.count += comp.childinc;
@@ -213,14 +215,27 @@ void incrementfoundlist(struct link comp ,struct lcount * explinkcount, int size
   }  
 }
 
+void repairorphans(void);
+void repairorphans(void) {
+  return;
+}
+
 int main(void) {
   struct unode * first = dwalk("/");
   struct unode * second = iwalk();
   struct unode * dw = first;
   struct unode * iw = second;
-  
-  printf(1,"compare ret value %d\n", ucompare(first,second));
 
+  int cmpr = ucompare(first,second);
+  printf(1,"compare ret value %d\n",cmpr );
+
+  if(cmpr == -1) {
+    if(first->size < second->size) {
+      printf(1, "orphaned inodes detected: cleaning\n");
+      repairorphans();
+    }
+  }
+  
   struct unode * dw_check;
   struct unode * iw_check;
   iw_check = iw;
