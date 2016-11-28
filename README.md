@@ -77,6 +77,6 @@ I changed these files to add the syscalls
 
 **comparemain.c**: runable program for comparing
 
-**fsck.c**: filesystem checker using all above programs (not complete)
+**fsck.c**: filesystem checker using all above programs to recover and verify filesystem
 
 **filepuke.c**: erases parts of directories
