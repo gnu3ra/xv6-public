@@ -146,6 +146,82 @@ void reduce(struct lcount * real, struct lcount * fake) {
   printf(1, "[reduce] real: %d fake: %d\n",realresult, fakeresult);
 }
 
+int writedir(char * path, struct dirent * entries, int size) {
+  char buf[512], *p;
+  int fd;
+  struct dirent de;
+  struct stat st;
+
+  if((fd = diropen(path, O_RDWR )) < 0){
+    printf(2, "cannot open %s\n", path);
+    return -2;
+  }
+  
+  if(fstat(fd, &st) < 0){
+    printf(2, "cannot stat %s\n", path);
+    close(fd);
+    return -3;
+  }
+  
+  
+  switch(st.type){
+  case T_FILE:
+    return -1;
+    break;
+    
+  case T_DIR:
+    if(strlen(path) + 1 + DIRSIZ + 1 > sizeof buf){
+      printf(1, " path too long\n");
+      break;
+    }
+
+    strcpy(buf, path);
+    p = buf+strlen(buf);
+    *p++ = '/';
+
+    struct dirent * dirbuf = malloc(sizeof(struct dirent)*DIRSIZ);
+
+    int counter = 0;
+    // printf(1, "parent candidate %d\n", parentcandidate->inum);
+    while(read(fd, &de, sizeof(de)) == sizeof(de)){
+      if(de.inum == 0)
+        continue;
+      
+      memmove(p, de.name, DIRSIZ);
+      p[DIRSIZ] = 0;
+      if(stat(buf, &st) < 0){
+        printf(1, "cannot stat %s\n", buf);
+        continue;
+      }
+      
+      dirbuf[counter] = de;
+      counter++;
+    }
+    close(fd);
+
+
+    if((fd = diropen(path, O_RDWR  )) < 0){
+      printf(2, "cannot open %s\n", path);
+      return -2;
+    }
+    
+    if(fstat(fd, &st) < 0){
+      printf(2, "cannot stat %s\n", path);
+      close(fd);
+      return -3;
+    }
+    
+    
+    int x;
+    for(x=0;x<counter;x++) {
+      //do this once we know what is in the file
+      write(fd, &(dirbuf[x]), sizeof(de));
+    }
+    break;
+  }
+   close(fd);
+   return 0;
+}
 
 void processlinks(void) {
   int i;
@@ -221,6 +297,7 @@ void repairorphans(void) {
 }
 
 int main(void) {
+
   struct unode * first = dwalk("/");
   struct unode * second = iwalk();
   struct unode * dw = first;
